@@ -1,10 +1,14 @@
 import "./globals.css";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Cpu, Calculator, ShieldCheck, FileText, Info, Mail } from "lucide-react";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "TokenCost AI | AI Model Token & API Cost Calculator",
   description: "Calculate real-time API pricing and token costs for GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro, and Llama 3 models.",
+  verification: {
+    google: "l1uSORWyximFY0Dw2MPT0ay36kj5g3OoNyvprtWCf1g",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
