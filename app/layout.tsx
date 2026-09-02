@@ -4,10 +4,33 @@ import Link from "next/link";
 import { Cpu, Calculator, ShieldCheck, FileText, Info, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "TokenCost AI | AI Model Token & API Cost Calculator",
+  metadataBase: new URL("https://tokencost-ai.vercel.app"),
+  title: "TokenCost AI | AI Model Token & Cost Calculator",
   description: "Calculate real-time API pricing and token costs for GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro, and Llama 3 models.",
   verification: {
     google: "l1uSORWyximFY0Dw2MPT0ay36kj5g3OoNyvprtWCf1g",
+  },
+  openGraph: {
+    title: "TokenCost AI | Real-Time LLM Token & Cost Calculator",
+    description: "Compare API costs across OpenAI, Anthropic, Google, and open-weight models in real time.",
+    url: "https://tokencost-ai.vercel.app",
+    siteName: "TokenCost AI",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "TokenCost AI Dashboard",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TokenCost AI | AI Model Token & Cost Calculator",
+    description: "Compare API costs across major LLM providers in real time.",
+    images: ["/og-image.png"],
   },
 };
 
@@ -42,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Main Body */}
         <main className="flex-1">{children}</main>
 
-        {/* AdSense Compliance Footer */}
+        {/* Footer */}
         <footer className="border-t border-white/10 bg-[#07090D] py-12 text-slate-500 text-xs">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-6">
             <div>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Calculator, Sparkles, DollarSign, Zap, ArrowUpDown, Layers } from "lucide-react";
+import { Calculator, Sparkles, DollarSign, Zap, ArrowUpDown, Layers, Bot, Code2, PenTool } from "lucide-react";
+import { OpenAIIcon, AnthropicIcon, GoogleIcon, MetaIcon, MistralIcon } from "./components/ProviderIcons";
 
 interface ModelPricing {
   id: string;
@@ -19,7 +20,8 @@ const AI_MODELS: ModelPricing[] = [
   { id: "claude-3-5-haiku", name: "Claude 3.5 Haiku", provider: "Anthropic", inputPerMillion: 0.80, outputPerMillion: 4.00, contextWindow: "200k" },
   { id: "gemini-1-5-flash", name: "Gemini 1.5 Flash", provider: "Google", inputPerMillion: 0.075, outputPerMillion: 0.30, contextWindow: "1M" },
   { id: "gemini-1-5-pro", name: "Gemini 1.5 Pro", provider: "Google", inputPerMillion: 1.25, outputPerMillion: 5.00, contextWindow: "2M" },
-  { id: "llama-3-3-70b", name: "Llama 3.3 70B (Groq)", provider: "Meta / Groq", inputPerMillion: 0.59, outputPerMillion: 0.79, contextWindow: "128k" },
+  { id: "llama-3-3-70b", name: "Llama 3.3 70B (Groq)", provider: "Meta", inputPerMillion: 0.59, outputPerMillion: 0.79, contextWindow: "128k" },
+  { id: "mistral-large-2", name: "Mistral Large 2", provider: "Mistral AI", inputPerMillion: 2.00, outputPerMillion: 6.00, contextWindow: "128k" },
 ];
 
 export default function Home() {
@@ -28,11 +30,15 @@ export default function Home() {
   const [completionTokens, setCompletionTokens] = useState<number>(500);
   const [requestsPerMonth, setRequestsPerMonth] = useState<number>(10000);
 
-  // Auto token estimation from typed text
+  const applyPreset = (prompt: number, completion: number, reqs: number) => {
+    setPromptTokens(prompt);
+    setCompletionTokens(completion);
+    setRequestsPerMonth(reqs);
+  };
+
   const handleTextChange = (text: string) => {
     setInputText(text);
     if (text.length > 0) {
-      // 1 token approx 4 characters or 0.75 words
       const estimated = Math.ceil(text.length / 4);
       setPromptTokens(estimated);
     }
@@ -50,10 +56,27 @@ export default function Home() {
     };
   };
 
+  const renderProviderIcon = (provider: string) => {
+    switch (provider) {
+      case "OpenAI":
+        return <OpenAIIcon className="w-4 h-4 text-white shrink-0" />;
+      case "Anthropic":
+        return <AnthropicIcon className="w-4 h-4 shrink-0" />;
+      case "Google":
+        return <GoogleIcon className="w-4 h-4 shrink-0" />;
+      case "Meta":
+        return <MetaIcon className="w-4 h-4 shrink-0" />;
+      case "Mistral AI":
+        return <MistralIcon className="w-4 h-4 shrink-0" />;
+      default:
+        return <Zap className="w-4 h-4 text-cyan-400 shrink-0" />;
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-12">
       
-      {/* Hero Header with SEO Target Terms */}
+      {/* Hero Header */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono">
           <Zap size={13} /> Updated with 2026 Token Pricing & Models
@@ -72,9 +95,36 @@ export default function Home() {
         {/* Left Input Section */}
         <div className="lg:col-span-5 space-y-6">
           <div className="tool-card p-6 rounded-2xl space-y-5">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <Calculator size={18} className="text-cyan-400" /> Token Parameters
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <Calculator size={18} className="text-cyan-400" /> Token Parameters
+              </h2>
+            </div>
+
+            {/* Quick Presets */}
+            <div className="space-y-1.5">
+              <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Quick Presets:</span>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  onClick={() => applyPreset(400, 200, 25000)}
+                  className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-500/30 text-[11px] font-medium text-slate-300 hover:text-cyan-400 transition-colors"
+                >
+                  <Bot size={12} /> Chatbot
+                </button>
+                <button
+                  onClick={() => applyPreset(3500, 800, 5000)}
+                  className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-white/5 hover:bg-blue-500/10 border border-white/10 hover:border-blue-500/30 text-[11px] font-medium text-slate-300 hover:text-blue-400 transition-colors"
+                >
+                  <Code2 size={12} /> Code Review
+                </button>
+                <button
+                  onClick={() => applyPreset(1200, 1500, 2000)}
+                  className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-white/5 hover:bg-purple-500/10 border border-white/10 hover:border-purple-500/30 text-[11px] font-medium text-slate-300 hover:text-purple-400 transition-colors"
+                >
+                  <PenTool size={12} /> Long Form
+                </button>
+              </div>
+            </div>
 
             {/* Live Text to Token Estimator */}
             <div>
@@ -168,11 +218,16 @@ export default function Home() {
                     const cost = calculateCost(model);
                     return (
                       <tr key={model.id} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="p-3.5 font-bold text-white">
-                          {model.name}
-                          <span className="block text-[10px] font-normal text-slate-500 font-mono">
-                            {model.contextWindow} ctx
-                          </span>
+                        <td className="p-3.5">
+                          <div className="flex items-center gap-2.5">
+                            {renderProviderIcon(model.provider)}
+                            <div>
+                              <div className="font-bold text-white">{model.name}</div>
+                              <span className="text-[10px] font-normal text-slate-500 font-mono">
+                                {model.contextWindow} ctx
+                              </span>
+                            </div>
+                          </div>
                         </td>
                         <td className="p-3.5 text-slate-400 font-mono">{model.provider}</td>
                         <td className="p-3.5 font-mono text-cyan-400 font-medium">
@@ -192,7 +247,7 @@ export default function Home() {
 
       </div>
 
-      {/* SEO Explanatory Guide Section (Crucial for AdSense Quality Indexing) */}
+      {/* SEO Explanatory Guide Section */}
       <section className="tool-card p-8 rounded-2xl space-y-6 text-slate-300 text-sm leading-relaxed border border-white/10">
         <h2 className="text-xl font-bold text-white">How AI Model Token Pricing Works</h2>
         <p>
