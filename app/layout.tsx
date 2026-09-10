@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Cpu, Calculator, ShieldCheck, FileText, Info, Mail } from "lucide-react";
+import { Cpu, Calculator, Scissors, Database, ShieldCheck, FileText, Info, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tokencost-ai.vercel.app"),
@@ -52,12 +52,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </Link>
 
-            <nav className="flex items-center gap-6 text-xs font-medium text-slate-400">
+            <nav className="flex items-center gap-4 sm:gap-6 text-xs font-medium text-slate-400">
               <Link href="/" className="hover:text-cyan-400 transition-colors flex items-center gap-1.5">
                 <Calculator size={14} /> Calculator
               </Link>
-              <Link href="/about" className="hover:text-cyan-400 transition-colors hidden sm:inline">About</Link>
-              <Link href="/privacy" className="hover:text-cyan-400 transition-colors hidden sm:inline">Privacy Policy</Link>
+              <Link href="/prompt-compressor" className="hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+                <Scissors size={14} /> Prompt Compressor
+              </Link>
+              <Link href="/rag-estimator" className="hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+                <Database size={14} /> RAG Estimator
+              </Link>
+              <Link href="/about" className="hover:text-cyan-400 transition-colors hidden md:inline">About</Link>
+              <Link href="/privacy" className="hover:text-cyan-400 transition-colors hidden md:inline">Privacy Policy</Link>
             </nav>
           </div>
         </header>
@@ -70,11 +76,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
               <p className="text-slate-300 font-bold mb-1">TokenCost AI</p>
-              <p>© 2026 TokenCost AI. Independent pricing analytics for developers.</p>
+              <p>© 2026 TokenCost AI. Independent pricing analytics & developer tools.</p>
             </div>
-            <div className="flex flex-wrap gap-6 text-slate-400">
+            <div className="flex flex-wrap items-center gap-6 text-slate-400">
+              <Link href="/" className="hover:text-cyan-400">Calculator</Link>
+              <Link href="/prompt-compressor" className="hover:text-cyan-400">Prompt Compressor</Link>
+              <Link href="/rag-estimator" className="hover:text-cyan-400">RAG Estimator</Link>
               <Link href="/about" className="hover:text-cyan-400 flex items-center gap-1"><Info size={12} /> About</Link>
-              <Link href="/privacy" className="hover:text-cyan-400 flex items-center gap-1"><ShieldCheck size={12} /> Privacy Policy</Link>
+              <Link href="/privacy" className="hover:text-cyan-400 flex items-center gap-1"><ShieldCheck size={12} /> Privacy</Link>
               <Link href="/terms" className="hover:text-cyan-400 flex items-center gap-1"><FileText size={12} /> Terms</Link>
               <Link href="/contact" className="hover:text-cyan-400 flex items-center gap-1"><Mail size={12} /> Contact</Link>
             </div>
